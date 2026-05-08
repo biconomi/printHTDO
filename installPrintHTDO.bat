@@ -35,7 +35,6 @@ set "printer3.folder=rico3353_z04162L16"
 set "printer3.inf=rico3353_z04162L16\z04162L16\disk1\MPC3003_.inf"
 set "printer3.model=RICOH MP C3003 PCL 6"
 
-
 set "printer4.name=KE TOAN MF260"
 set "printer4.ip=192.168.12.150"
 set "printer4.link=https://github.com/biconomi/printHTDO/releases/download/v1.0/MF260MFDriverV6101WP.zip"
@@ -43,6 +42,15 @@ set "printer4.zip=MF260MFDriverV6101WP.zip"
 set "printer4.folder=MF260MFDriverV6101WP"
 set "printer4.inf=MF260MFDriverV6101WP\MF260MFDriverV6101WP\CNLB0MA64.INF"
 set "printer4.model=Canon MF260 Series UFRII LT"
+
+:: === MAY IN MARKETING ===
+set "printer5.name=MAY IN MARKETING"
+set "printer5.ip=10.0.0.11"
+set "printer5.link=https://github.com/biconomi/printHTDO/releases/download/v1.0/HL-L2360DW.zip"
+set "printer5.zip=HL-L2360DW.zip"
+set "printer5.folder=HL-L2360DW"
+set "printer5.inf=HL-L2360DW\HL-L2360DW\32_64\BROHL13A.INF"
+set "printer5.model=Brother HL-L2360D series"
 
 set DOWNLOAD_DIR=C:\temp
 
@@ -74,9 +82,10 @@ echo 1. MAY IN PHU KIEN (KHOA)
 echo 2. MAY IN KINH DOANH (PHOTO)
 echo 3. MAY IN DICH VU (PHOTO)
 echo 4. MAY IN KE TOAN (MF260)
+echo 5. MAY IN MARKETING
 echo 0. Quay lai
 echo =============================
-set /p choice=Nhap so [0-3]:
+set /p choice=Nhap so [0-5]:
 
 if "%choice%"=="1" (
     set "PRINTER_NAME=!printer1.name!"
@@ -110,6 +119,14 @@ if "%choice%"=="1" (
     set "PRINTER_FOLDER=!printer4.folder!"
     set "PRINTER_INF=!printer4.inf!"
     set "PRINTER_MODEL=!printer4.model!"
+) else if "%choice%"=="5" (
+    set "PRINTER_NAME=!printer5.name!"
+    set "PRINTER_IP=!printer5.ip!"
+    set "PRINTER_LINK=!printer5.link!"
+    set "PRINTER_ZIP=!printer5.zip!"
+    set "PRINTER_FOLDER=!printer5.folder!"
+    set "PRINTER_INF=!printer5.inf!"
+    set "PRINTER_MODEL=!printer5.model!"
 ) else if "%choice%"=="0" (
     goto MAIN_MENU
 ) else (
@@ -130,7 +147,7 @@ if errorlevel 2 (
 )
 
 :: === TAI DRIVER ===
-echo Dang tai driver tu Google Drive...
+echo Dang tai driver...
 if exist "%DOWNLOAD_DIR%" rmdir /s /q "%DOWNLOAD_DIR%"
 mkdir "%DOWNLOAD_DIR%"
 powershell -Command "Invoke-WebRequest -Uri '%PRINTER_LINK%' -OutFile '%DOWNLOAD_DIR%\%PRINTER_ZIP%'"
@@ -165,8 +182,10 @@ rundll32 printui.dll,PrintUIEntry /if /b "%PRINTER_NAME%" /f "!INF_PATH!" /r "IP
 
 echo.
 echo Da cai dat xong: %PRINTER_NAME% (IP: %PRINTER_IP%)
+
 :: Xoa thu muc tam
 rmdir /s /q "%DOWNLOAD_DIR%"
+
 pause
 goto MAIN_MENU
 
@@ -200,6 +219,7 @@ if not defined printer[%delChoice%] (
 set "printerToDelete=!printer[%delChoice%]!"
 echo.
 echo Ban da chon: !printerToDelete!
+
 choice /M "Ban co muon xoa may in nay khong"
 if errorlevel 2 (
     echo Da huy xoa.
@@ -210,5 +230,6 @@ if errorlevel 2 (
 echo Dang xoa may in...
 rundll32 printui.dll,PrintUIEntry /dl /n "!printerToDelete!"
 echo Da xoa xong.
+
 pause
 goto MAIN_MENU
